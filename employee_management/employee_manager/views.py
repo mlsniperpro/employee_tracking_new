@@ -9,12 +9,8 @@ from employee_manager.models import Employee
 # Create your views here.
 #Here goes the home page
 def index(request):
-    employees = Employee.objects.order_by('first_name')
-    context ={
-        "employees":employees,
-    }
-    #return HttpResponse(request,'employee_manager/index.html',context)
-    return "Hello"
+    
+    return render(request, "employee_manager/employee_details.html")
 def employee_details(request, employee_id):
     employee = get_object_or_404(Employee,pk=employee_id)
     return render(request, "employee_manager/employee_details.html",{'employee':employee})

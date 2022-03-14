@@ -1,19 +1,28 @@
-from re import template
-from django.http import Http404
-from django.shortcuts import get_object_or_404, render
-from django.http import HttpResponse
-from django.template import loader
+from django.shortcuts import render
+from .models import Employee, EmployeeInstance, ClockIn, ClockOut
 
-from employee_manager.models import Employee
-
-# Create your views here.
-#Here goes the home page
+#Create your views here
 def index(request):
-    
-    return render(request, "employee_manager/employee_details.html")
-def employee_details(request, employee_id):
-    employee = get_object_or_404(Employee,pk=employee_id)
-    return render(request, "employee_manager/employee_details.html",{'employee':employee})
-def clock_in(request, employee_id):
-    response = "The employee %s have just clocked in"
-    return HttpResponse(response % employee_id)
+    """Our view function for the homepage of the site"""
+
+    #Generating essential object counts
+    num_of_employees = Employee.objects.all().count()
+    num_instances = EmployeeInstance.objects.all().count()
+
+    #Available employees (status = 'a')
+    num_instances_available = EmployeeInstance.objects.filter(status__exact='a').count()
+    employees_on_leave = EmployeeInstance.objects.filter(status__exact='b').count()
+    #all() is implied
+    employees_who_reported = ClockIn.objects.count()
+    employees_who_left = ClockOut.objects.count()
+    context = {
+        'num_of_employees':num_of_employees,
+        'num_instances':num_instances,
+        'num_instances_available':num_instances_available,
+        'employees_who_reported':employees_who_reported,
+        'employees_who_left':employees_who_left,
+        'employees_on_leave':employees_on_leave,
+    } 
+
+    #Render the HTML template below index.html with data in context variable
+    return render(request, 'index.html', context=context)

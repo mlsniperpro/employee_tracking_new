@@ -27,11 +27,27 @@ class ClockIn(models.Model):
     clock_in_time = models.DateTimeField(null=True,blank=True)
     employee = ForeignKey('Employee', on_delete=models.RESTRICT,null=True)
 
+    class Meta:
+        ordering = ['clock_in_time']
+    def get_absolute_url(self):
+        return reverse("employee_clocking_in", args=[str(self.id)])
+    def __str__(self):
+        """String representing clock in object"""
+        return f'{self.employee.first_name}, {self.employee.last_name}, {self.clock_in_time}'
+    
 class ClockOut(models.Model):
     """Model representing employees Clocking Out"""
     id = models.UUIDField(primary_key=True,default=uuid.uuid4, help_text="Unique Id for clocking Out")
     employee = ForeignKey('Employee', on_delete=models.RESTRICT,null=True)
     clock_out_time = models.DateTimeField(null=True,blank=True)
+
+    class Meta:
+        ordering = ['clock_out_time']
+    def get_absolute_url(self):
+        return reverse("employee_clocking_out", args=[str(self.id)])
+    def __str__(self):
+        """String representing clock in object"""
+        return f'{self.employee.first_name}, {self.employee.last_name}, {self.clock_out_time}'
 class EmployeeInstance(models.Model):
     """This represents specific instance of employee(who can be given time off)"""
     id = models.UUIDField(primary_key=True,default=uuid.uuid4, help_text="Unique Id for employee across organization")
@@ -41,14 +57,22 @@ class EmployeeInstance(models.Model):
     end_date = models.DateField('OffEnded', null=True,blank=True)
     AVALABILITY_STATUS = (
         ('a','Available'),
-        ('b','Off')
+        ('b','Time Off')
     )
+    status = models.CharField(
+        max_length=1,
+        choices=AVALABILITY_STATUS,
+        blank=True,
+        default='a',
+        help_text='Employee Availability',
+    )
+
     class Meta:
         ordering = ['start_date','end_date']
     def get_absolute_url(self):
         return reverse("time_off", args=[str(self.id)])
     def __str__(self):
         """String representing the time off object"""
-        return f'{self.start_date}, {self.end_date}'
+        return f'{self.id}, {self.employee.first_name}, {self.employee.last_name}'
     
     

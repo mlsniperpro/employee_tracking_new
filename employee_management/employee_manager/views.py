@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from .models import Employee, EmployeeInstance, ClockIn, ClockOut
+from django.views import generic
 
 #Create your views here
 def index(request):
@@ -26,3 +27,7 @@ def index(request):
 
     #Render the HTML template below index.html with data in context variable
     return render(request, 'index.html', context=context)
+class EmployeeListView(generic.ListView):
+    model = Employee
+class EmployeeDetailView(generic.DetailView):
+    model = Employee

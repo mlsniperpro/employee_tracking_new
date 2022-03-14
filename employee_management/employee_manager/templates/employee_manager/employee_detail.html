@@ -1,0 +1,27 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1>Name: {{ employee.first_name }}, {{employee.last_name}}</h1>
+
+  <p><strong>Role:</strong> <a href="">{{ employee.role }}</a></p> <!-- author detail link not yet defined -->
+  <p><strong>Department:</strong> {{ employee.department }}</p>
+  <p><strong>Email:</strong> {{ employee.email }}</p>
+  <p><strong>Date of Joining:</strong> {{ employee.joining_date }}</p>
+
+
+  <div style="margin-left:20px;margin-top:20px">
+    <h4>Instances</h4>
+
+    {% for instance in employee.employeeinstance_set.all %}
+      <hr>
+      <p class="{% if instance.status == 'a' %}text-success{% elif instance.status == 'b' %}text-danger{% else %}text-warning{% endif %}">
+        {{ instance.get_status_display }}
+      </p>
+      {% if instance.status != 'a' %}
+        <p><strong>Reporting back date due:</strong> {{ instance.end_date }}</p>
+      {% endif %}
+      <p><strong>Off Reason:</strong> {{ instance.off_reason }}</p>
+      <p class="text-muted"><strong>Id:</strong> {{ instance.id }}</p>
+    {% endfor %}
+  </div>
+{% endblock %}

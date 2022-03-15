@@ -1,8 +1,10 @@
 from django.db import models
 import uuid
+from datetime import date
 from django.utils import timezone
 from django.urls import reverse
 from sqlalchemy import ForeignKey
+from django.contrib.auth.models import User
 
 # Create your models here.
 class Employee(models.Model):
@@ -55,6 +57,7 @@ class EmployeeInstance(models.Model):
     off_reason = models.CharField(max_length=200)
     start_date = models.DateField('OffStarted',null=True,blank=True)
     end_date = models.DateField('OffEnded', null=True,blank=True)
+    given_off = models.ForeignKey(User, on_delete=models.SET_NULL,null=True,blank=True)
     AVALABILITY_STATUS = (
         ('a','Available'),
         ('b','Time Off')
@@ -71,6 +74,10 @@ class EmployeeInstance(models.Model):
         ordering = ['start_date','end_date']
     def get_absolute_url(self):
         return reverse("time_off", args=[str(self.id)])
+    def off_overdue(self):
+        if self.end_date and date.today() > self.end_date:
+            return True
+        return False
     def __str__(self):
         """String representing the time off object"""
         return f'{self.id}, {self.employee.first_name}, {self.employee.last_name}'

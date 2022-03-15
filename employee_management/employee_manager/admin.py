@@ -13,13 +13,14 @@ class EmployeeAdmin(admin.ModelAdmin):
 #admin.site.register(EmployeeInstance)
 @admin.register(EmployeeInstance)
 class EmployeeInstanceAdmin(admin.ModelAdmin):
+    list_display = ('employee','status','given_off','end_date','id')
     list_filter = ('status','end_date')
     fieldsets = (
         (None, {
             'fields':('employee','off_reason','id')
         }),
         ('Availalability',{
-            'fields':('status','end_date')
+            'fields':('status','end_date','given_off')
         }),
     )
 admin.site.register(ClockIn)

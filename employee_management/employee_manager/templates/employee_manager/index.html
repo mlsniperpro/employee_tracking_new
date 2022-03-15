@@ -26,5 +26,16 @@
     <p>No employees available.</p>
 {% endif %}
         <script src="" async defer></script>
+        <h2>Dynamic content</h2>
+
+        <p>The library has the following record counts:</p>
+        <ul>
+          <li><strong>Employees:</strong> {{ num_of_employees }}</li>
+          <li><strong>Employee Instances:</strong> {{ num_instances }}</li>
+          <li><strong>Employees  available:</strong> {{ num_instances_available }}</li>
+          <li><strong>Employees on Leave:</strong> {{ employees_on_leave }}</li>
+        </ul>
+        
+        <p>You have visited this page {{ num_visits }} time{{ num_visits|pluralize }}.</p>
     </body>
 </html>

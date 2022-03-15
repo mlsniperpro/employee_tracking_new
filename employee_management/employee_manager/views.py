@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from .models import Employee, EmployeeInstance, ClockIn, ClockOut
 from django.views import generic
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 #Create your views here
 def index(request):
@@ -35,3 +36,11 @@ class EmployeeListView(generic.ListView):
     paginate_by = 10
 class EmployeeDetailView(generic.DetailView):
     model = Employee
+class OffPeriodEmployeesByUserListView(LoginRequiredMixin, generic.ListView):
+    """Generic class-based listing off periods to current employees"""
+    model = EmployeeInstance
+    template_name = 'employee_manager/employee_instances_of_off_given.html'
+    paginate_by = 10
+
+    def get_queryset(self):
+        return EmployeeInstance.objects.filter(given_off=self.request.user).filter(status__exact='b').order_by('end_date')

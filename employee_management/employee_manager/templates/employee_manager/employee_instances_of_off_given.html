@@ -1,0 +1,19 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+    <h1>Off Periods</h1>
+
+    {% if employeeinstance_list %}
+    <ul>
+
+      {% for employeeinst in employeeinstance_list %}
+      <li class="{% if employeeinst.off_overdue %}text-danger{% endif %}">
+        <a href="{% url 'employee-detail' employeeinst.employee.pk %}">{{employeeinst.employee.first_name}}, {{employeeinst.employee.last_name}}</a> ({{ employeeinst.end_date }})
+      </li>
+      {% endfor %}
+    </ul>
+
+    {% else %}
+      <p>You have not been give off days</p>
+    {% endif %}
+{% endblock %}

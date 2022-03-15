@@ -72,6 +72,7 @@ class EmployeeInstance(models.Model):
 
     class Meta:
         ordering = ['start_date','end_date']
+        permissions = (("can_end_off","Set the employee as returned from off period"),)
     def get_absolute_url(self):
         return reverse("time_off", args=[str(self.id)])
     def off_overdue(self):
